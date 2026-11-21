@@ -1,10 +1,31 @@
-import { useState, useMemo } from "react";
-import Sidebar from "./components/Sidebar";
-import TaskCard from "./components/TaskCard";
-import TaskForm from "./components/TaskForm";
-import FocusCarousel from "./components/FocusCarousel";
-import { initialTasks } from "./data/tasks";
-import { useLocalStorage } from "./hooks/useLocalStorage";
+ import { useState, useMemo, useEffect } from "react";
+import Sidebar from "./Sidebar";
+import TaskCard from "./TaskCard";
+import TaskForm from "./TaskForm";
+import FocusCarousel from "./FocusCarousel";
+
+const initialTasks = [
+  { id: 1, title: "Learn React Hooks", description: "Practice useState and useEffect", status: "In progress", priority: "High" },
+  { id: 2, title: "Build FocusBoard UI", description: "Complete dashboard design", status: "To do", priority: "Medium" },
+  { id: 3, title: "Deploy on Vercel", description: "Fix build errors and deploy", status: "Completed", priority: "High" }
+];
+
+function useLocalStorage(key, initialValue) {
+  const [value, setValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch {
+      return initialValue;
+    }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
+}
 
 export default function App() {
   const [tasks, setTasks] = useLocalStorage("focusboard-tasks", initialTasks);
@@ -81,4 +102,4 @@ export default function App() {
       </main>
     </div>
   );
-                                                         }
+         }
